@@ -388,6 +388,40 @@ section { padding: 80px 0; position: relative; }
   .founder-photo-frame { width: 220px; height: 220px; }
 }
 
+/* ---------- Studio / office photo: wide framed shot ---------- */
+.studio-photo-frame {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--beige-line);
+  line-height: 0;
+}
+.studio-photo-frame img {
+  width: 100%;
+  height: clamp(260px, 42vw, 480px);
+  object-fit: cover;
+  display: block;
+}
+.studio-photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(20,14,8,.28) 100%);
+  pointer-events: none;
+}
+.studio-photo-caption {
+  position: absolute;
+  left: 26px;
+  bottom: 18px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: .95rem;
+  font-weight: 600;
+  text-shadow: 0 2px 8px rgba(0,0,0,.35);
+  z-index: 1;
+}
+
 /* ---------- Services grid ---------- */
 .services-grid {
   display: grid;
@@ -415,6 +449,16 @@ section { padding: 80px 0; position: relative; }
   transform: translateY(-6px);
   box-shadow: var(--shadow-card-hover);
   border-color: var(--orange-tint-2);
+}
+/* Browsers draw their own default focus outline around a link when it's
+   jumped to via a #hash (like our footer links do) — this replaces that
+   plain black/blue square with nothing for that case, while still giving
+   real keyboard (Tab-key) users a visible, on-brand focus ring. */
+.service-card-link:focus { outline: none; }
+.service-card-link:focus-visible {
+  outline: 2px solid var(--orange-tint-2);
+  outline-offset: 4px;
+  border-radius: var(--radius-md);
 }
 /* Briefly highlights a service card when jumped to directly, e.g. from a
    footer link — draws the eye to exactly which service it is. */
@@ -565,7 +609,16 @@ footer {
 .footer-brand p { font-size: .9rem; color: rgba(251,245,234,.6); max-width: 32ch; }
 footer h4 { color: var(--beige-panel); font-size: .95rem; margin-bottom: 16px; font-family: var(--font-body); }
 footer ul li { margin-bottom: 10px; font-size: .92rem; }
+footer ul li a {
+  -webkit-tap-highlight-color: transparent;
+}
 footer ul li a:hover { color: var(--orange-tint-2); }
+footer ul li a:focus-visible {
+  outline: 2px solid var(--orange-tint-2);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+footer ul li a:focus:not(:focus-visible) { outline: none; }
 .social-row { display: flex; gap: 12px; margin-top: 16px; }
 .social-row a {
   width: 38px; height: 38px; border-radius: 50%;

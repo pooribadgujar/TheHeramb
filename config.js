@@ -7,7 +7,7 @@
 // While testing on your own computer with the backend running locally,
 // change this back to "http://localhost:4000".
 
-window.HERAMB_API_BASE = "https://theherambackend.onrender.com";
+window.HERAMB_API_BASE = "https://theheramb.onrender.com";
 
 // Every enquiry submitted on payment.html also opens a pre-filled WhatsApp
 // message to this number, so you get it instantly even if the backend
