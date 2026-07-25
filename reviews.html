@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Reviews | Heramb Designing &amp; Printing</title>
+<meta name="description" content="Read what 1000+ customers say about Heramb Designing & Printing's design, printing and event services.">
+<link rel="icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .rating-summary {
+    display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    padding: 40px; margin-bottom: 50px;
+  }
+  .rating-big { font-family: var(--font-mono); font-size: 3.4rem; font-weight: 700; color: var(--orange-deep); line-height: 1; }
+  .bar-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 13px; color: var(--charcoal-soft);
+    width: 100%; background: none; border: none; padding: 6px 8px; border-radius: 8px;
+    font-family: var(--font-body); cursor: pointer; text-align: left; transition: background .2s ease;
+  }
+  .bar-row:hover, .bar-row.active { background: var(--orange-tint); }
+  .bar-row span.bar-label { min-width: 46px; }
+  .bar-row span.bar-pct { min-width: 32px; }
+  .bar-track { width: 100%; max-width: 220px; flex: 1 1 auto; height: 8px; background: var(--beige-line); border-radius: 999px; overflow: hidden; }
+  @media (max-width: 640px) {
+    .rating-summary { flex-direction: column; align-items: stretch; gap: 20px; padding: 26px 20px; }
+    .bar-row { font-size: 12.5px; gap: 8px; }
+    .bar-track { max-width: none; }
+  }
+  .bar-fill { height: 100%; background: var(--orange); }
+  .bar-list { display:flex; flex-direction:column; }
+  .rating-detail {
+    display: none; margin-top: 18px; padding: 20px 22px; border-radius: var(--radius-sm);
+    background: var(--beige-bg); border: 1px solid var(--beige-line); position: relative;
+  }
+  .rating-detail.show { display: block; }
+  .rating-detail .rd-stars { color: var(--orange); font-size: 15px; letter-spacing: 2px; margin-bottom: 8px; }
+  .rating-detail .rd-quote { font-style: italic; color: var(--charcoal); margin: 0 0 10px; }
+  .rating-detail .rd-person { font-size: 13px; font-weight: 700; color: var(--charcoal-soft); }
+  .rating-hint { font-size: 12px; color: var(--charcoal-faint); margin-top: 10px; }
+
+  /* ---------- Write a Review form (same look as the payment page form) ---------- */
+  .form-grid { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  #reviewForm label { font-size: 13px; font-weight:600; color:var(--charcoal-soft); display:block; margin-bottom:6px; }
+  #reviewForm input, #reviewForm textarea {
+    width:100%; padding: 12px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--beige-line); background:#fff; font-family: var(--font-body); font-size: .95rem;
+  }
+  #reviewForm textarea { resize: vertical; min-height: 100px; }
+  @media (max-width: 640px){ #reviewForm .form-grid { grid-template-columns: 1fr; } }
+
+  .star-picker { display:inline-flex; gap:6px; font-size: 34px; line-height:1; cursor:pointer; }
+  .star-picker span { color: var(--beige-line); transition: color .15s ease, transform .15s ease; }
+  .star-picker span.filled { color: var(--orange); }
+  .star-picker span:hover { transform: scale(1.15); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-wrap">
+    <a href="index.html" class="brand"><img src="images/logo.png" alt="Heramb Designing & Printing logo"></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="projects.html">Recent Projects</a>
+      <a href="reviews.html">Customer Reviews</a>
+      <a href="payment.html">Payment</a>
+     
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <span class="crop-mark tl"></span>
+  <span class="crop-mark tr"></span>
+  <span class="blob orange" style="width:300px;height:300px;top:-70px;right:6%;"></span>
+  <span class="blob yellow" style="width:220px;height:220px;bottom:-50px;left:3%;"></span>
+  <div class="container section-head">
+   
+    <h1>1K customers.<br> One consistent standard.</h1>
+    <p class="lead" style="margin:0 auto;">Real feedback from the shops, families and event organisers we've worked with since 1998.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="panel rating-summary" style="position:relative; overflow:hidden;">
+      <span class="blob teal drift" style="width:180px;height:180px;top:-40px;right:-30px;"></span>
+      <div class="text-center">
+        <div class="rating-big" id="ratingBigNum">4.9</div>
+        <div class="review-stars" id="ratingBigStars">★★★★★</div>
+        <div style="font-size:13px; color:var(--charcoal-soft);"></div>
+      </div>
+      <div style="flex:1; min-width:240px;">
+        <div class="bar-list" id="ratingBars">
+          <button type="button" class="bar-row" data-stars="5" data-pct="88"
+            data-quote="Heramb handled our entire exhibition stall — design, print and setup. One call and everything was sorted."
+            data-name="Rutuja Patil" data-role="Event Organiser">
+            <span class="bar-label">5 star</span><div class="bar-track"><div class="bar-fill" style="width:88%;"></div></div><span class="bar-pct">88%</span>
+          </button>
+          <button type="button" class="bar-row" data-stars="4" data-pct="9"
+            data-quote="Good print quality and fair pricing overall. Delivery took a day longer than the date we were originally given."
+            data-name="Prashant More" data-role="Retail Shop Owner">
+            <span class="bar-label">4 star</span><div class="bar-track"><div class="bar-fill" style="width:9%;"></div></div><span class="bar-pct">9%</span>
+          </button>
+          <button type="button" class="bar-row" data-stars="3" data-pct="2"
+            data-quote="The design work was nice, but I had to follow up a couple of times before getting a final quote for my order."
+            data-name="Snehal Chaudhari" data-role="Boutique Owner">
+            <span class="bar-label">3 star</span><div class="bar-track"><div class="bar-fill" style="width:2%;"></div></div><span class="bar-pct">2%</span>
+          </button>
+          <button type="button" class="bar-row" data-stars="2" data-pct="1"
+            data-quote="Needed a couple of rounds of revisions before the print colours matched what we'd agreed on. Got there in the end."
+            data-name="Ajay Solanki" data-role="Distributor">
+            <span class="bar-label">2 star</span><div class="bar-track"><div class="bar-fill" style="width:1%;"></div></div><span class="bar-pct">1%</span>
+          </button>
+          <button type="button" class="bar-row" data-stars="1" data-pct="0"
+            data-quote="No 1-star reviews yet — and we're working to keep it that way for every customer."
+            data-name="" data-role="">
+            <span class="bar-label">1 star</span><div class="bar-track"><div class="bar-fill" style="width:0%;"></div></div><span class="bar-pct">0%</span>
+          </button>
+        </div>
+        <div class="rating-detail" id="ratingDetail">
+          <div class="rd-stars" id="rdStars"></div>
+          <p class="rd-quote" id="rdQuote"></p>
+          <div class="rd-person" id="rdPerson"></div>
+        </div>
+        <p class="rating-hint"></p>
+      </div>
+    </div>
+    <br>
+    <br>
+     <h2><center>Our Satisfied Customers</center></h2>
+     <br>
+  
+
+    <div class="review-grid" id="approvedReviewGrid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Ordered visiting cards and banners for our shop opening — print quality and turnaround were both excellent.</p>
+        <div class="review-person"><div class="review-avatar">SK</div><div><div class="review-name">Sanjay Kulkarni</div><div class="review-role">Shop Owner</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Heramb handled our entire exhibition stall — design, print and setup. One call and everything was sorted.</p>
+        <div class="review-person"><div class="review-avatar">RP</div><div><div class="review-name">Rutuja Patil</div><div class="review-role">Event Organiser</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Been getting our packaging printed here for years. Consistent colours, honest pricing, always on time.</p>
+        <div class="review-person"><div class="review-avatar">AD</div><div><div class="review-name">Amit Deshmukh</div><div class="review-role">Manufacturer</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Designed our wedding invitations beautifully — exactly the look we described, delivered ahead of schedule.</p>
+        <div class="review-person"><div class="review-avatar">NP</div><div><div class="review-name">Neha Pawar</div><div class="review-role">Bride</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Our clinic's branding and stationery came out very professional. Great attention to detail throughout.</p>
+        <div class="review-person"><div class="review-avatar">DV</div><div><div class="review-name">Dr. Vinod Rathi</div><div class="review-role">Clinic Owner</div></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Handled photography for our corporate launch along with the backdrop and standees. Very smooth experience.</p>
+        <div class="review-person"><div class="review-avatar">MS</div><div><div class="review-name">Meera Shah</div><div class="review-role">Marketing Head</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container panel" style="padding:50px 40px;">
+    <div class="section-head" style="margin-bottom:26px;">
+      <span class="eyebrow">Been a Heramb customer?</span>
+      <h2>Write a Review</h2>
+      <p class="lead" style="margin:0 auto;">Rate us, tell us about your experience.</p>
+    </div>
+
+    <form id="reviewForm" style="max-width:560px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:18px;">
+        <label style="display:block; margin-bottom:8px;">Your Rating</label>
+        <div id="starPicker" class="star-picker">
+          <span data-i="1">★</span><span data-i="2">★</span><span data-i="3">★</span><span data-i="4">★</span><span data-i="5">★</span>
+        </div>
+        <input type="hidden" id="rReviewRating" value="">
+      </div>
+      <div class="form-grid">
+        <div>
+          <label for="rName">Your Name</label>
+          <input type="text" id="rName" required placeholder="Your name">
+        </div>
+        <div>
+          <label for="rRole">You Are A... (optional)</label>
+          <input type="text" id="rRole" placeholder="e.g. Shop Owner, Bride, Event Organiser">
+        </div>
+        <div class="full">
+          <label for="rPhone">Phone Number (optional)</label>
+          <input type="tel" id="rPhone" placeholder="+91 ">
+        </div>
+        <div class="full">
+          <label for="rReviewText">Your Review</label>
+          <textarea id="rReviewText" required placeholder="Tell us about your experience with Heramb..."></textarea>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <button type="submit" class="btn btn-primary" style="margin-top:18px;">Submit Review →</button>
+      </div>
+      <p id="reviewFormMessage" style="display:none; text-align:center; margin-top:16px; padding:14px 18px; border-radius:var(--radius-sm); background:var(--orange-tint); color:var(--orange-deep); font-size:.9rem; font-weight:600;"></p>
+    </form>
+
+    <div class="hero-actions" style="justify-content:center; flex-wrap:wrap; margin-top:32px; padding-top:28px; border-top:1px solid var(--beige-line);">
+      <a href="https://wa.me/919579480187?text=Hi%2C%20I%27d%20like%20to%20share%20a%20review%20of%20your%20work." class="btn btn-outline whatsapp-btn" target="_blank" rel="noopener">Or Just Message Us on WhatsApp</a>
+      <!--
+        GOOGLE FORM: replace the href below with your own Google Form link.
+        In Google Forms: Send -> link icon -> copy the "forms.gle" link and
+        paste it here in place of the placeholder URL.
+      -->
+      <a href="https://forms.gle/a3bJWWWBiYuXPoJC6" id="googleFormBtn" class="btn btn-outline" target="_blank" rel="noopener">📝 Fill Our Google Review Form</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.png" alt="Heramb Designing & Printing">
+        <p>Creative design, quality printing and full event support — proudly serving customers since 1998.</p>
+        <div class="social-row">
+          <a href="https://www.instagram.com/piyushbadgujar?igsh=MWdqeDI5dndzd2lpaQ==" aria-label="Instagram" target="_blank" rel="noopener"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+         
+          <a href="https://wa.me/919579480187" class="whatsapp-icon" aria-label="WhatsApp" target="_blank" rel="noopener"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="profile.html">Profile</a></li>
+          <li><a href="projects.html">Recent Projects</a></li>
+          <li><a href="reviews.html">Customer Reviews</a></li>
+          <li><a href="payment.html">Payment</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="index.html#service-branding">Creative Designing</a></li>
+          <li><a href="index.html#service-packaging">Product Design</a></li>
+          <li><a href="index.html#service-print">Quality Printing</a></li>
+          <li><a href="index.html#service-photography">Event and Stall Management</a></li>
+           <li><a href="index.html#service-design">Other Creatives</a></li>
+        </ul>
+      </div>
+      <div>
+       <h4>Contact</h4>
+        <ul>
+          <li>+91 95794 80187</li>
+          <li>+91 77450 97704</li>
+          <li>Jalgaon, Maharashtra</li>
+        </ul>
+        <br>
+         <h4 style="display:inline;">Email</h4>
+    <a href="mailto:herambdesign1@gmail.com"> herambdesign1@gmail.com</a>
+          
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>©Heramb Designing &amp; Printing. All rights reserved.</span>
+      <span>Dreams Come True</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  (function () {
+    var rows = document.querySelectorAll('#ratingBars .bar-row');
+    var detail = document.getElementById('ratingDetail');
+    var rdStars = document.getElementById('rdStars');
+    var rdQuote = document.getElementById('rdQuote');
+    var rdPerson = document.getElementById('rdPerson');
+
+    rows.forEach(function (row) {
+      row.addEventListener('click', function () {
+        var alreadyActive = row.classList.contains('active');
+        rows.forEach(function (r) { r.classList.remove('active'); });
+
+        if (alreadyActive) {
+          detail.classList.remove('show');
+          return;
+        }
+        row.classList.add('active');
+
+        var stars = parseInt(row.getAttribute('data-stars'), 10);
+        var quote = row.getAttribute('data-quote');
+        var name = row.getAttribute('data-name');
+        var role = row.getAttribute('data-role');
+
+        rdStars.textContent = '★★★★★'.slice(0, stars) + '☆☆☆☆☆'.slice(0, 5 - stars);
+        rdQuote.textContent = '“' + quote + '”';
+        rdPerson.textContent = name ? (name + (role ? ' — ' + role : '')) : '';
+        detail.classList.add('show');
+        detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

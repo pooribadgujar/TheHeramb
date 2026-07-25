@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Heramb Designing &amp; Printing</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
+<style>
+  body { background: var(--beige-bg); }
+  .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 20px 80px; }
+  .admin-header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .admin-header img { height: 36px; }
+  .logout-btn, .refresh-btn {
+    background: var(--charcoal); color:#fff; border:none; padding:9px 18px;
+    border-radius: 999px; font-size: 13px; font-weight:700; cursor:pointer;
+  }
+  .refresh-btn { background: var(--orange); }
+  .logout-btn:hover { background: var(--orange-deep); }
+  .refresh-btn:hover { background: var(--orange-deep); }
+
+  #loginScreen {
+    max-width: 380px; margin: 90px auto; background: var(--beige-panel);
+    border: 1px solid var(--beige-line); border-radius: var(--radius-md);
+    padding: 34px; text-align:center; box-shadow: var(--shadow-card);
+  }
+  #loginScreen h2 { margin-top:0; }
+  #loginScreen input {
+    width:100%; padding: 12px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--beige-line); font-family: var(--font-body); font-size: .95rem; margin: 14px 0;
+  }
+  #loginError { color: var(--coral-pop); font-size: .85rem; min-height: 18px; margin-top: 4px; }
+
+  #dashboard { display:none; }
+  .stats-row { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin-bottom: 26px; }
+  .stat-box { background: var(--beige-panel); border:1px solid var(--beige-line); border-radius: var(--radius-md); padding: 18px 20px; }
+  .stat-box .num { font-family: var(--font-display); font-size: 1.7rem; font-weight:800; color: var(--orange-deep); }
+  .stat-box .lbl { font-size: .78rem; color: var(--charcoal-soft); text-transform:uppercase; letter-spacing:.04em; }
+
+  table { width:100%; border-collapse: collapse; background: var(--beige-panel); border-radius: var(--radius-md); overflow:hidden; }
+  thead th {
+    text-align:left; font-size: .74rem; text-transform:uppercase; letter-spacing:.05em;
+    color: var(--charcoal-soft); padding: 12px 14px; background: var(--beige-line);
+  }
+  tbody td { padding: 12px 14px; font-size: .9rem; border-bottom: 1px solid var(--beige-line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--orange-tint); }
+  .msg-cell { max-width: 240px; white-space: pre-wrap; }
+  .status-select {
+    padding: 6px 8px; border-radius: 8px; border:1px solid var(--beige-line); font-size: .8rem; font-family: var(--font-body);
+  }
+  .del-btn { background:none; border:none; color: var(--coral-pop); cursor:pointer; font-size: .85rem; font-weight:700; }
+  .del-btn:hover { text-decoration: underline; }
+  .empty-note { text-align:center; padding: 50px 20px; color: var(--charcoal-faint); }
+  .table-wrap { overflow-x:auto; }
+
+  .add-project-form {
+    background: var(--beige-panel); border:1px solid var(--beige-line); border-radius: var(--radius-md);
+    padding: 22px 24px; margin-bottom: 26px; display:grid; gap:14px; grid-template-columns: 1fr 1fr; align-items:start;
+  }
+  .add-project-form .full { grid-column: 1 / -1; }
+  .add-project-form label { display:block; font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; color:var(--charcoal-soft); margin-bottom:5px; }
+  .add-project-form input[type="text"],
+  .add-project-form select,
+  .add-project-form textarea {
+    width:100%; padding: 10px 12px; border-radius: var(--radius-sm); border:1px solid var(--beige-line);
+    font-family: var(--font-body); font-size: .9rem; background:#fff;
+  }
+  .add-project-form textarea { resize: vertical; min-height: 60px; }
+  .add-project-form input[type="file"] { font-size: .85rem; }
+  #addProjectMsg { font-size:.85rem; min-height:18px; margin-top:2px; }
+  #addProjectMsg.err { color: var(--coral-pop); }
+  #addProjectMsg.ok { color: #2e7d32; }
+
+  .projects-thumb-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:14px; }
+  .proj-thumb-card { background: var(--beige-panel); border:1px solid var(--beige-line); border-radius: var(--radius-sm); overflow:hidden; }
+  .proj-thumb-card img { width:100%; height: 110px; object-fit:cover; display:block; }
+  .proj-thumb-card .pt-body { padding: 10px 12px; }
+  .proj-thumb-card h4 { margin:0 0 4px; font-size:.88rem; }
+  .proj-thumb-card p { margin:0; font-size:.76rem; color:var(--charcoal-soft); }
+  .proj-thumb-card .pt-cat { font-size:.68rem; text-transform:uppercase; letter-spacing:.04em; color: var(--orange-deep); font-weight:700; margin-bottom:4px; }
+  .proj-thumb-card .del-btn { display:block; margin-top:8px; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h2>Admin Login</h2>
+  <p style="color:var(--charcoal-soft); font-size:.9rem;">Enter the admin password to view customer enquiries.</p>
+  <input type="password" id="loginPassword" placeholder="Admin password" autocomplete="current-password">
+  <button class="btn btn-primary" id="loginBtn" style="width:100%;">Log In</button>
+  <p id="loginError"></p>
+</div>
+
+<div id="dashboard" class="admin-wrap">
+  <div class="admin-header">
+    <a href="index.html" class="brand"><img src="images/logo.png" alt="Heramb Designing & Printing"></a>
+    <div style="display:flex; gap:10px;">
+      <button class="refresh-btn" id="refreshBtn">↻ Refresh</button>
+      <button class="logout-btn" id="logoutBtn">Log Out</button>
+    </div>
+  </div>
+
+  <p id="offlineBanner" style="display:none; background: var(--orange-tint); color: var(--orange-deep); padding: 12px 16px; border-radius: var(--radius-sm); font-size: .85rem; font-weight:600; margin-bottom: 18px;">
+    ⚠ Showing enquiries saved on this device only (couldn't reach the server). They're still saved permanently in this browser.
+  </p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="num" id="statTotal">0</div><div class="lbl">Total Enquiries</div></div>
+    <div class="stat-box"><div class="num" id="statNew">0</div><div class="lbl">New</div></div>
+    <div class="stat-box"><div class="num" id="statPaid">0</div><div class="lbl">Paid</div></div>
+    <div class="stat-box"><div class="num" id="statCompleted">0</div><div class="lbl">Completed</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Name</th><th>Phone</th><th>Service</th><th>Amount</th><th>Message</th><th>Status</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="enquiryTableBody"></tbody>
+    </table>
+  </div>
+  <p class="empty-note" id="emptyNote" style="display:none;">No enquiries yet. New customer submissions from the Payment page will appear here automatically.</p>
+
+  <div class="admin-header" style="margin-top:50px;">
+    <h2 style="margin:0;">Customer Reviews</h2>
+    <button class="refresh-btn" id="refreshReviewsBtn">↻ Refresh</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="num" id="statReviewTotal">0</div><div class="lbl">Total Reviews</div></div>
+    <div class="stat-box"><div class="num" id="statReviewPending">0</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="num" id="statReviewApproved">0</div><div class="lbl">Approved (Live)</div></div>
+    <div class="stat-box"><div class="num" id="statReviewRejected">0</div><div class="lbl">Rejected</div></div>
+  </div>
+  <p style="font-size:.85rem; color:var(--charcoal-soft); margin:-10px 0 16px;">Approve a review to make it appear on the public Reviews page. Reject or delete to keep it off the site.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Name</th><th>Role</th><th>Phone</th><th>Rating</th><th>Review</th><th>Status</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="reviewTableBody"></tbody>
+    </table>
+  </div>
+  <p class="empty-note" id="emptyReviewNote" style="display:none;">No reviews yet. New submissions from the Reviews page will appear here automatically.</p>
+
+  <div class="admin-header" style="margin-top:50px;">
+    <h2 style="margin:0;">Recent Projects</h2>
+    <button class="refresh-btn" id="refreshProjectsBtn">↻ Refresh</button>
+  </div>
+  <p style="font-size:.85rem; color:var(--charcoal-soft); margin:-6px 0 16px;">Add a photo + a couple of lines and it appears on the public Projects page immediately — no coding needed.</p>
+
+  <form class="add-project-form" id="addProjectForm">
+    <div>
+      <label for="projTitle">Project title</label>
+      <input type="text" id="projTitle" placeholder="e.g. Diwali Sweet Box Packaging" required maxlength="200">
+    </div>
+    <div>
+      <label for="projCategory">Category</label>
+      <select id="projCategory" required>
+        <option value="" disabled selected>Choose one…</option>
+        <option value="branding">Creative Designing</option>
+        <option value="packaging">Product Design</option>
+        <option value="print">Quality Printing</option>
+        <option value="photography">Event and Stall Management</option>
+        <option value="design">Other Creatives</option>
+      </select>
+    </div>
+    <div class="full">
+      <label for="projDescription">Short description (optional)</label>
+      <textarea id="projDescription" placeholder="One or two lines about the project" maxlength="500"></textarea>
+    </div>
+    <div class="full">
+      <label for="projPhoto">Photo</label>
+      <input type="file" id="projPhoto" accept="image/*" required>
+    </div>
+    <div class="full">
+      <button type="submit" class="btn btn-primary" id="addProjectBtn">Add Project</button>
+      <p id="addProjectMsg"></p>
+    </div>
+  </form>
+
+  <div class="projects-thumb-grid" id="projectsThumbGrid"></div>
+  <p class="empty-note" id="emptyProjectsNote" style="display:none;">No projects added from here yet.</p>
+</div>
+
+<script>
+  var apiBase = window.HERAMB_API_BASE || '';
+
+  var loginScreen = document.getElementById('loginScreen');
+  var dashboard = document.getElementById('dashboard');
+  var loginBtn = document.getElementById('loginBtn');
+  var loginPassword = document.getElementById('loginPassword');
+  var loginError = document.getElementById('loginError');
+
+  var offlineMode = false;
+  var LOCAL_KEY = 'heramb_enquiries';
+
+  function getLocalEnquiries() {
+    try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+  function setLocalEnquiries(list) {
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); }
+    catch (e) { console.error('Could not save locally:', e); }
+  }
+
+  function showDashboard(offline) {
+    offlineMode = !!offline;
+    loginScreen.style.display = 'none';
+    dashboard.style.display = 'block';
+    document.getElementById('offlineBanner').style.display = offlineMode ? 'block' : 'none';
+    loadEnquiries();
+    loadReviews();
+    loadProjects();
+  }
+  function showLogin() {
+    loginScreen.style.display = 'block';
+    dashboard.style.display = 'none';
+  }
+
+  function checkSession() {
+    fetch(apiBase + '/api/admin/check', { credentials: 'include' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d.loggedIn) showDashboard(false); else showLogin(); })
+      .catch(function () { showLogin(); });
+  }
+
+  function doLogin() {
+    loginError.textContent = '';
+    var pw = loginPassword.value;
+    if (!pw) return;
+    loginBtn.disabled = true;
+    fetch(apiBase + '/api/admin/login', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    })
+      .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, d: d }; }); })
+      .then(function (r) {
+        if (r.ok) { loginPassword.value = ''; showDashboard(false); }
+        else loginError.textContent = r.d.error || 'Login failed.';
+      })
+      .catch(function () {
+        // Backend unreachable (asleep / not deployed / no internet).
+        // Fall back to the local offline password so enquiries saved on
+        // this device are still viewable.
+        var localPw = window.HERAMB_ADMIN_LOCAL_PASSWORD || '';
+        if (localPw && pw === localPw) {
+          loginPassword.value = '';
+          showDashboard(true);
+        } else {
+          loginError.textContent = 'Could not reach the server, and that password didn\'t match the offline password either.';
+        }
+      })
+      .finally(function () { loginBtn.disabled = false; });
+  }
+  loginBtn.addEventListener('click', doLogin);
+  loginPassword.addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
+
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    if (offlineMode) { showLogin(); return; }
+    fetch(apiBase + '/api/admin/logout', { method: 'POST', credentials: 'include' }).then(showLogin);
+  });
+  document.getElementById('refreshBtn').addEventListener('click', loadEnquiries);
+  document.getElementById('refreshReviewsBtn').addEventListener('click', loadReviews);
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
+
+  function isLocalId(id) { return typeof id === 'string' && id.indexOf('local-') === 0; }
+
+  function renderRows(rows) {
+    var tbody = document.getElementById('enquiryTableBody');
+    var emptyNote = document.getElementById('emptyNote');
+    tbody.innerHTML = '';
+
+    document.getElementById('statTotal').textContent = rows.length;
+    document.getElementById('statNew').textContent = rows.filter(function (r) { return r.status === 'new'; }).length;
+    document.getElementById('statPaid').textContent = rows.filter(function (r) { return r.status === 'paid'; }).length;
+    document.getElementById('statCompleted').textContent = rows.filter(function (r) { return r.status === 'completed'; }).length;
+
+    if (!rows.length) { emptyNote.style.display = 'block'; return; }
+    emptyNote.style.display = 'none';
+
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + escapeHtml(r.created_at) + (isLocalId(r.id) ? ' <span title="Saved on this device only" style="color:var(--orange-deep);">📱</span>' : '') + '</td>' +
+        '<td>' + escapeHtml(r.name) + '</td>' +
+        '<td>' + escapeHtml(r.phone) + '</td>' +
+        '<td>' + escapeHtml(r.service) + '</td>' +
+        '<td>' + (r.amount ? '₹' + escapeHtml(r.amount) : '—') + '</td>' +
+        '<td class="msg-cell">' + escapeHtml(r.message) + '</td>' +
+        '<td></td><td></td>';
+
+      var statusTd = tr.children[6];
+      var select = document.createElement('select');
+      select.className = 'status-select';
+      ['new', 'contacted', 'paid', 'completed', 'spam'].forEach(function (s) {
+        var opt = document.createElement('option');
+        opt.value = s; opt.textContent = s;
+        if (s === r.status) opt.selected = true;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', function () {
+        if (isLocalId(r.id)) {
+          var list = getLocalEnquiries();
+          list.forEach(function (item) { if (item.id === r.id) item.status = select.value; });
+          setLocalEnquiries(list);
+          loadEnquiries();
+        } else {
+          fetch(apiBase + '/api/admin/enquiries/' + r.id, {
+            method: 'PATCH', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: select.value })
+          }).then(loadEnquiries);
+        }
+      });
+      statusTd.appendChild(select);
+
+      var delTd = tr.children[7];
+      var delBtn = document.createElement('button');
+      delBtn.className = 'del-btn';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', function () {
+        if (!confirm('Delete this enquiry permanently?')) return;
+        if (isLocalId(r.id)) {
+          var list = getLocalEnquiries().filter(function (item) { return item.id !== r.id; });
+          setLocalEnquiries(list);
+          loadEnquiries();
+        } else {
+          fetch(apiBase + '/api/admin/enquiries/' + r.id, { method: 'DELETE', credentials: 'include' }).then(loadEnquiries);
+        }
+      });
+      delTd.appendChild(delBtn);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Loads enquiries from the backend (if reachable) and merges them with
+  // whatever's saved locally in this browser, so nothing is ever lost —
+  // even across closing the tab, restarting the computer, or the backend
+  // being temporarily offline.
+  function loadEnquiries() {
+    var localRows = getLocalEnquiries();
+
+    if (offlineMode) {
+      renderRows(localRows);
+      return;
+    }
+
+    fetch(apiBase + '/api/admin/enquiries', { credentials: 'include' })
+      .then(function (res) {
+        if (res.status === 401) { showLogin(); throw new Error('not logged in'); }
+        return res.json();
+      })
+      .then(function (data) {
+        document.getElementById('offlineBanner').style.display = 'none';
+        var serverRows = data.enquiries || [];
+        renderRows(serverRows.concat(localRows));
+      })
+      .catch(function (e) {
+        console.error(e);
+        // Server briefly unreachable while already logged in — still show
+        // whatever's saved locally instead of a blank screen.
+        document.getElementById('offlineBanner').style.display = 'block';
+        renderRows(localRows);
+      });
+  }
+
+  checkSession();
+
+  // ======================= REVIEWS MODERATION =======================
+  var REVIEW_LOCAL_KEY = 'heramb_reviews';
+
+  function getLocalReviews() {
+    try { return JSON.parse(localStorage.getItem(REVIEW_LOCAL_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+  function setLocalReviews(list) {
+    try { localStorage.setItem(REVIEW_LOCAL_KEY, JSON.stringify(list)); }
+    catch (e) { console.error('Could not save reviews locally:', e); }
+  }
+
+  function renderReviewRows(rows) {
+    var tbody = document.getElementById('reviewTableBody');
+    var emptyNote = document.getElementById('emptyReviewNote');
+    tbody.innerHTML = '';
+
+    document.getElementById('statReviewTotal').textContent = rows.length;
+    document.getElementById('statReviewPending').textContent = rows.filter(function (r) { return r.status === 'pending'; }).length;
+    document.getElementById('statReviewApproved').textContent = rows.filter(function (r) { return r.status === 'approved'; }).length;
+    document.getElementById('statReviewRejected').textContent = rows.filter(function (r) { return r.status === 'rejected'; }).length;
+
+    if (!rows.length) { emptyNote.style.display = 'block'; return; }
+    emptyNote.style.display = 'none';
+
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      var ratingStars = '★★★★★'.slice(0, r.rating || 0);
+      tr.innerHTML =
+        '<td>' + escapeHtml(r.created_at) + (isLocalId(r.id) ? ' <span title="Saved on this device only" style="color:var(--orange-deep);">📱</span>' : '') + '</td>' +
+        '<td>' + escapeHtml(r.name) + '</td>' +
+        '<td>' + escapeHtml(r.role) + '</td>' +
+        '<td>' + escapeHtml(r.phone) + '</td>' +
+        '<td style="color:var(--orange-deep); letter-spacing:1px;">' + ratingStars + '</td>' +
+        '<td class="msg-cell">' + escapeHtml(r.review_text) + '</td>' +
+        '<td></td><td></td>';
+
+      var statusTd = tr.children[6];
+      var select = document.createElement('select');
+      select.className = 'status-select';
+      ['pending', 'approved', 'rejected'].forEach(function (s) {
+        var opt = document.createElement('option');
+        opt.value = s; opt.textContent = s;
+        if (s === r.status) opt.selected = true;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', function () {
+        if (isLocalId(r.id)) {
+          var list = getLocalReviews();
+          list.forEach(function (item) { if (item.id === r.id) item.status = select.value; });
+          setLocalReviews(list);
+          loadReviews();
+        } else {
+          fetch(apiBase + '/api/admin/reviews/' + r.id, {
+            method: 'PATCH', credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: select.value })
+          }).then(loadReviews);
+        }
+      });
+      statusTd.appendChild(select);
+
+      var delTd = tr.children[7];
+      var delBtn = document.createElement('button');
+      delBtn.className = 'del-btn';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', function () {
+        if (!confirm('Delete this review permanently?')) return;
+        if (isLocalId(r.id)) {
+          var list = getLocalReviews().filter(function (item) { return item.id !== r.id; });
+          setLocalReviews(list);
+          loadReviews();
+        } else {
+          fetch(apiBase + '/api/admin/reviews/' + r.id, { method: 'DELETE', credentials: 'include' }).then(loadReviews);
+        }
+      });
+      delTd.appendChild(delBtn);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function loadReviews() {
+    var localRows = getLocalReviews();
+
+    if (offlineMode) {
+      renderReviewRows(localRows);
+      return;
+    }
+
+    fetch(apiBase + '/api/admin/reviews', { credentials: 'include' })
+      .then(function (res) {
+        if (res.status === 401) { return { reviews: [] }; }
+        return res.json();
+      })
+      .then(function (data) {
+        var serverRows = data.reviews || [];
+        renderReviewRows(serverRows.concat(localRows));
+      })
+      .catch(function (e) {
+        console.error(e);
+        renderReviewRows(localRows);
+      });
+  }
+
+  // ======================= PROJECTS (ADD / DELETE) =======================
+  var CATEGORY_LABELS = {
+    branding: 'Creative Designing',
+    packaging: 'Product Design',
+    print: 'Quality Printing',
+    photography: 'Event and Stall Management',
+    design: 'Other Creatives'
+  };
+
+  function renderProjectsGrid(rows) {
+    var grid = document.getElementById('projectsThumbGrid');
+    var emptyNote = document.getElementById('emptyProjectsNote');
+    grid.innerHTML = '';
+
+    if (!rows.length) { emptyNote.style.display = 'block'; return; }
+    emptyNote.style.display = 'none';
+
+    rows.forEach(function (p) {
+      var card = document.createElement('div');
+      card.className = 'proj-thumb-card';
+      card.innerHTML =
+        '<img src="' + escapeHtml(p.image_url) + '" alt="' + escapeHtml(p.title) + '">' +
+        '<div class="pt-body">' +
+          '<div class="pt-cat">' + escapeHtml(CATEGORY_LABELS[p.category] || p.category) + '</div>' +
+          '<h4>' + escapeHtml(p.title) + '</h4>' +
+          '<p>' + escapeHtml(p.description) + '</p>' +
+        '</div>';
+      var delBtn = document.createElement('button');
+      delBtn.className = 'del-btn';
+      delBtn.textContent = 'Delete';
+      delBtn.style.margin = '0 12px 12px';
+      delBtn.addEventListener('click', function () {
+        if (!confirm('Remove "' + p.title + '" from the Projects page?')) return;
+        fetch(apiBase + '/api/admin/projects/' + p.id, { method: 'DELETE', credentials: 'include' }).then(loadProjects);
+      });
+      card.appendChild(delBtn);
+      grid.appendChild(card);
+    });
+  }
+
+  function loadProjects() {
+    if (offlineMode) { renderProjectsGrid([]); return; }
+    fetch(apiBase + '/api/projects')
+      .then(function (r) { return r.json(); })
+      .then(function (data) { renderProjectsGrid(data.projects || []); })
+      .catch(function (e) { console.error(e); renderProjectsGrid([]); });
+  }
+
+  document.getElementById('refreshProjectsBtn').addEventListener('click', loadProjects);
+
+  document.getElementById('addProjectForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = document.getElementById('addProjectMsg');
+    var btn = document.getElementById('addProjectBtn');
+    msg.textContent = ''; msg.className = '';
+
+    if (offlineMode) {
+      msg.textContent = "Can't add projects while the server is unreachable — try again once you're back online.";
+      msg.className = 'err';
+      return;
+    }
+
+    var photoInput = document.getElementById('projPhoto');
+    if (!photoInput.files[0]) {
+      msg.textContent = 'Please choose a photo.'; msg.className = 'err'; return;
+    }
+
+    var fd = new FormData();
+    fd.append('title', document.getElementById('projTitle').value);
+    fd.append('category', document.getElementById('projCategory').value);
+    fd.append('description', document.getElementById('projDescription').value);
+    fd.append('photo', photoInput.files[0]);
+
+    btn.disabled = true;
+    msg.textContent = 'Uploading…'; msg.className = '';
+
+    fetch(apiBase + '/api/admin/projects', {
+      method: 'POST', credentials: 'include', body: fd
+    })
+      .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, d: d }; }); })
+      .then(function (r) {
+        if (r.ok) {
+          msg.textContent = 'Added! It\'s already live on the Projects page.'; msg.className = 'ok';
+          document.getElementById('addProjectForm').reset();
+          loadProjects();
+        } else {
+          msg.textContent = r.d.error || 'Something went wrong.'; msg.className = 'err';
+        }
+      })
+      .catch(function () {
+        msg.textContent = 'Could not reach the server. Try again in a moment.'; msg.className = 'err';
+      })
+      .finally(function () { btn.disabled = false; });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Projects | Heramb Designing &amp; Printing</title>
+<meta name="description" content="A look at recent branding, packaging, print and event work by Heramb Designing & Printing.">
+<link rel="icon" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
+<style>
+  .t1 { background: linear-gradient(135deg,#e05e0e,#b8480a); }
+  .t2 { background: linear-gradient(135deg,#2a2118,#5f5445); }
+  .t3 { background: linear-gradient(135deg,#f0c894,#e05e0e); }
+  .t4 { background: linear-gradient(135deg,#5f5445,#2a2118); }
+  .t5 { background: linear-gradient(135deg,#e05e0e,#ecb400); }
+  .t6 { background: linear-gradient(135deg,#b8480a,#2a2118); }
+  .t7 { background: linear-gradient(135deg,#ecb400,#e05e0e); }
+  .t8 { background: linear-gradient(135deg,#2a2118,#b8480a); }
+  .t9 { background: linear-gradient(135deg,#f0c894,#5f5445); }
+  .swap-note {
+    margin-top: 60px; padding: 26px 30px; border-radius: var(--radius-md);
+    background: var(--orange-tint); border: 1px dashed var(--orange-deep);
+    font-family: var(--font-mono); font-size: 13.5px; color: var(--charcoal-soft);
+  }
+  .project-thumb[data-img] { cursor: zoom-in; }
+  .projects-grid.hide-tags .project-thumb .tag { display: none; }
+  .photo-lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(20, 16, 12, 0.92);
+    align-items: center; justify-content: center;
+    padding: 40px 20px;
+  }
+  .photo-lightbox.active { display: flex; }
+  .photo-lightbox .lightbox-img {
+    max-width: 100%; max-height: 100%;
+    width: auto; height: auto;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-close {
+    position: absolute; top: 18px; right: 24px;
+    background: none; border: none; color: #fff;
+    font-size: 40px; line-height: 1; cursor: pointer;
+    font-family: var(--font-mono);
+  }
+  .lightbox-close:hover { color: var(--orange-deep); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-wrap">
+    <a href="index.html" class="brand"><img src="images/logo.png" alt="Heramb Designing & Printing logo"></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="projects.html">Recent Projects</a>
+      <a href="reviews.html">Customer Reviews</a>
+      <a href="payment.html">Payment</a>
+     
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <span class="crop-mark tl"></span>
+  <span class="crop-mark tr"></span>
+  <span class="blob orange" style="width:300px;height:300px;top:-70px;right:6%;"></span>
+  <span class="blob yellow" style="width:220px;height:220px;bottom:-50px;left:3%;"></span>
+  <div class="container section-head">
+
+    <h1>Recent Projects</h1>
+    <p class="lead" style="margin:0 auto;">A showcase of branding, packaging, print and event work from the last few years.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container" style="position:relative;">
+    <span class="blob coral drift" style="width:200px;height:200px;top:-30px;left:-50px; z-index:-1;"></span>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="branding">Creative Designing</button>
+      <button class="filter-btn" data-filter="packaging">Product Design</button>
+      <button class="filter-btn" data-filter="print">Quality Printing</button>
+      <button class="filter-btn" data-filter="photography">Event and Stall Management</button>
+      <button class="filter-btn" data-filter="design">Other Creatives</button>
+    </div>
+
+    <div class="projects-grid">
+
+      
+       <div class="project-card" data-category="photography">
+        <div data-img="images/projects/photo-1.jpg" class="project-thumb t8" style="background: linear-gradient(135deg,#2a2118,#b8480a);"><img src="images/projects/photo-1.jpg" alt="Event and Stall Management project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Event and Stall Management</span></div>
+        <div class="project-body"><h3>Banwat Group Stall</h3><p>On-site event photography of a branded exhibition stall.</p></div>
+      </div>
+
+
+       <div class="project-card" data-category="packaging">
+        <div data-img="images/projects/26.jpeg" class="project-thumb t2" style="background: linear-gradient(135deg,#2a2118,#5f5445);"><img src="images/projects/26.jpeg" alt="Product Design project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Product Design</span></div>
+        <div class="project-body"><h3>Tulsi Pipe Holdings</h3><p>Life-size holding design and printing.</p></div>
+      </div>
+
+      <div class="project-card" data-category="packaging">
+        <div data-img="images/projects/pkg-1.jpg" class="project-thumb t2" style="background: linear-gradient(135deg,#2a2118,#5f5445);"><img src="images/projects/pkg-1.jpg" alt="Product Design project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Product Design</span></div>
+        <div class="project-body"><h3>Moringa Powder Pouch Design</h3><p>Retail pouch design for a natural health foods brand.</p></div>
+      </div>
+      
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-1.jpg" class="project-thumb t5" style="background: linear-gradient(135deg,#e05e0e,#ecb400);"><img src="images/projects/brand-1.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>R.C Bafna Jewellers Store Launch</h3><p>Creative campaign visual for a new jewellery showroom where the earring is the centerpiece.</p></div>
+      </div>
+
+
+      <div class="project-card" data-category="packaging">
+        <div data-img="images/projects/pkg-5.jpg" class="project-thumb t9" style="background: linear-gradient(135deg,#e05e0e,#b8480a);"><img src="images/projects/pkg-5.jpg" alt="Product Design project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Product Design</span></div>
+        <div class="project-body"><h3>Calendar Design</h3><p>Branded yearly calendar layout and printing.</p></div>
+      </div>
+
+       <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-6.jpg" class="project-thumb t5" style="background: linear-gradient(135deg,#e05e0e,#ecb400);"><img src="images/projects/other-6.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Decorative Ganpati Makhar</h3><p>Ornamental peacock-themed puja mandap design and print.</p></div>
+      </div>
+      
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-2.jpg" class="project-thumb t8" style="background: linear-gradient(135deg,#2a2118,#b8480a);"><img src="images/projects/brand-2.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>Festival Standee Creative</h3><p>Themed street standee design on ocassion of Mahaveer Jayanti..</p></div>
+      </div>
+      
+      <div class="project-card" data-category="packaging">
+        <div data-img="images/projects/pkg-6.jpg" class="project-thumb t1" style="background: linear-gradient(135deg,#e05e0e,#b8480a);"><img src="images/projects/pkg-6.jpg" alt="Product Design project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Product Design</span></div>
+        <div class="project-body"><h3>Drip Irrigation Reel Label</h3><p>Circular reel-face packaging artwork for a drip tape brand.</p></div>
+      </div>
+
+  
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-6.jpg" class="project-thumb t3" style="background: linear-gradient(135deg,#f0c894,#e05e0e);"><img src="images/projects/brand-6.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>AI powered Bot</h3><p>Custom Monkey character AI speaking bot at Raisoni college launch fest.</p></div>
+      </div>
+
+      
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-8.jpg" class="project-thumb t2" style="background: linear-gradient(135deg,#2a2118,#5f5445);"><img src="images/projects/other-8.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Ram Standee Cutouts</h3><p>Life-size illuminated standee cutouts for a temple installation.</p></div>
+      </div>
+
+
+      
+      <div class="project-card" data-category="packaging">
+        <div data-img="images/projects/pkg-4.jpg" class="project-thumb t6" style="background: linear-gradient(135deg,#b8480a,#2a2118);"><img src="images/projects/pkg-4.jpg" alt="Product Design project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Product Design</span></div>
+        <div class="project-body"><h3>Agarbatti Box Packaging</h3><p>Carton design across sizes for a premium incense range.</p></div>
+      </div>
+
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-7.jpg" class="project-thumb t8" style="background: linear-gradient(135deg,#2a2118,#b8480a);"><img src="images/projects/other-7.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Sculptural Wall Art</h3><p>Textured relief wall art piece with a figurative design.</p></div>
+      </div>
+
+      
+
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-3.jpg" class="project-thumb t4" style="background: linear-gradient(135deg,#5f5445,#2a2118);"><img src="images/projects/brand-3.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>Festival Booth Creative</h3><p>Wraparound structure creative for a community celebration.</p></div>
+      </div>
+
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-4.jpg" class="project-thumb t2" style="background: linear-gradient(135deg,#2a2118,#5f5445);"><img src="images/projects/brand-4.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>Brand Monument</h3><p>Logo-led decorative installation creative for a jeweller.</p></div>
+      </div>
+
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-5.jpg" class="project-thumb t7" style="background: linear-gradient(135deg,#ecb400,#e05e0e);"><img src="images/projects/brand-5.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>Festival Greeting Installation</h3><p>Sculptural greeting creative for a jewellers festival campaign.</p></div>
+      </div>
+
+      
+      <div class="project-card" data-category="photography">
+        <div data-img="images/projects/photo-2.jpg" class="project-thumb t4" style="background: linear-gradient(135deg,#5f5445,#2a2118);"><img src="images/projects/photo-2.jpg" alt="Event and Stall Management project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Event and Stall Management</span></div>
+        <div class="project-body"><h3>Wedding Stage Decor Coverage</h3><p>Event display and photography of a floral mandap and stage setup.</p></div>
+      </div>
+
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-1.jpg" class="project-thumb t9" style="background: linear-gradient(135deg,#f0c894,#5f5445);"><img src="images/projects/other-1.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Large Scale Earring Artwork</h3><p>Creative campaign visual for a new jewellery showroom where the earring is the centerpiece.</p></div>
+      </div>
+      
+      <div class="project-card" data-category="packaging">
+        <div data-img="images/projects/pkg-3.jpg" class="project-thumb t3" style="background: linear-gradient(135deg,#f0c894,#e05e0e);"><img src="images/projects/pkg-3.jpg" alt="Product Design project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Product Design</span></div>
+        <div class="project-body"><h3>Incense Sticks Pouch </h3><p>Multi-fragrance zip pouch designs for an agarbatti brand.</p></div>
+      </div>
+
+
+
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-2.jpg" class="project-thumb t7" style="background: linear-gradient(135deg,#2a2118,#5f5445);"><img src="images/projects/other-2.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Hand-Painted Flower Vase</h3><p>Textured ceramic vase with hand-painted floral artwork.</p></div>
+      </div>
+
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-3.jpg" class="project-thumb t3" style="background: linear-gradient(135deg,#f0c894,#e05e0e);"><img src="images/projects/other-3.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Carved &amp; Painted Vase</h3><p>Intricately carved decorative vase with vibrant hand-painted finish.</p></div>
+      </div>
+
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-4.jpg" class="project-thumb t6" style="background: linear-gradient(135deg,#b8480a,#2a2118);"><img src="images/projects/other-4.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Sunflower Motif Vase</h3><p>Hand-painted sunflower and rose artwork on a black ceramic vase.</p></div>
+      </div>
+
+      
+
+      <div class="project-card" data-category="photography">
+        <div data-img="images/projects/photo-3.jpg" class="project-thumb t9" style="background: linear-gradient(135deg,#f0c894,#5f5445);"><img src="images/projects/photo-3.jpg" alt="Event and Stall Management project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Event and Stall Management</span></div>
+        <div class="project-body"><h3>Janmashtami Decor Coverage</h3><p>Event display and photography of a festive theme backdrop setup.</p></div>
+      </div>
+
+
+      <div class="project-card" data-category="print">
+        <div data-img="images/projects/print-1.jpg" class="project-thumb t6" style="background: linear-gradient(135deg,#b8480a,#2a2118);"><img src="images/projects/print-1.jpg" alt="Quality Printing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Quality Printing</span></div>
+        <div class="project-body"><h3>Large-Format Banner Printing</h3><p>Bulk outdoor banner printing and finishing for a pipe manufacturer.</p></div>
+      </div>
+      
+
+      <div class="project-card" data-category="branding">
+        <div data-img="images/projects/brand-7.jpg" class="project-thumb t6" style="background: linear-gradient(135deg,#b8480a,#2a2118);"><img src="images/projects/brand-7.jpg" alt="Creative Designing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Creative Designing</span></div>
+        <div class="project-body"><h3>Landmark Statue Creative</h3><p>Large-scale figure creative in public square on ocassion of Ram Mandir inauguration.</p></div>
+      </div>
+
+  
+    
+      <div class="project-card" data-category="print">
+        <div data-img="images/projects/print-2.jpg" class="project-thumb t3" style="background: linear-gradient(135deg,#f0c894,#e05e0e);"><img src="images/projects/print-2.jpg" alt="Quality Printing project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Quality Printing</span></div>
+        <div class="project-body"><h3>Calendar Printing</h3><p>Full-colour yearly wall calendar printing.</p></div>
+      </div>
+
+     
+      <div class="project-card" data-category="design">
+        <div data-img="images/projects/other-5.jpg" class="project-thumb t1" style="background: linear-gradient(135deg,#e05e0e,#b8480a);"><img src="images/projects/other-5.jpg" alt="Other Creatives project photo" loading="lazy" decoding="async" class="thumb-img"><span class="tag">Other Creatives</span></div>
+        <div class="project-body"><h3>Street Scene Potrait</h3><p>Original watercolour painting of a sunlit street corner.</p></div>
+      </div>
+
+
+     
+
+    </div>
+
+  </div>
+</section>
+
+<div id="photoLightbox" class="photo-lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" class="lightbox-img">
+</div>
+
+<section>
+  <div class="container panel text-center" style="padding:60px 30px;">
+    <h2>Like what you see?</h2>
+    <p class="lead" style="margin:0 auto 26px;">Let's add your project to the list.</p>
+    <div class="hero-actions" style="justify-content:center;">
+      <a href="payment.html#enquiry" class="btn btn-primary">Start a Project →</a>
+      <a href="https://wa.me/919579480187?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20your%20services." class="btn btn-outline whatsapp-btn" target="_blank" rel="noopener">WhatsApp Us</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.png" alt="Heramb Designing & Printing">
+        <p>Creative design, quality printing and full event support — proudly serving customers since 1998.</p>
+        <div class="social-row">
+          <a href="https://www.instagram.com/piyushbadgujar?igsh=MWdqeDI5dndzd2lpaQ==" aria-label="Instagram" target="_blank" rel="noopener"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+         
+          <a href="https://wa.me/919579480187" class="whatsapp-icon" aria-label="WhatsApp" target="_blank" rel="noopener"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="profile.html">Profile</a></li>
+          <li><a href="projects.html">Recent Projects</a></li>
+          <li><a href="reviews.html">Customer Reviews</a></li>
+          <li><a href="payment.html">Payment</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="index.html#service-branding">Creative Designing</a></li>
+          <li><a href="index.html#service-packaging">Product Design</a></li>
+          <li><a href="index.html#service-print">Quality Printing</a></li>
+          <li><a href="index.html#service-photography">Event and Stall Management</a></li>
+           <li><a href="index.html#service-design">Other Creatives</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>+91 95794 80187</li>
+          <li>+91 77450 97704</li>
+          <li>Jalgaon, Maharashtra</li>
+        </ul>
+        <br>
+         <h4 style="display:inline;">Email</h4>
+    <a href="mailto:herambdesign1@gmail.com"> herambdesign1@gmail.com</a>
+          
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>©Heramb Designing &amp; Printing. All rights reserved.</span>
+      <span>Dreams Come True</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+(function () {
+  var lightbox = document.getElementById('photoLightbox');
+  var lightboxImg = lightbox.querySelector('.lightbox-img');
+  var closeBtn = lightbox.querySelector('.lightbox-close');
+
+  document.querySelectorAll('.project-thumb[data-img]').forEach(function (thumb) {
+    thumb.addEventListener('click', function () {
+      lightboxImg.src = thumb.getAttribute('data-img');
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+    });
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.src = '';
+  }
+
+  closeBtn.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ---- Projects added from admin.html load in here automatically ----
+  var CATEGORY_LABELS = {
+    branding: 'Creative Designing',
+    packaging: 'Product Design',
+    print: 'Quality Printing',
+    photography: 'Event and Stall Management',
+    design: 'Other Creatives'
+  };
+  var TAG_CLASSES = ['t1','t2','t3','t4','t5','t6','t7','t8','t9'];
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
+
+  function attachLightbox(thumbEl) {
+    thumbEl.addEventListener('click', function () {
+      lightboxImg.src = thumbEl.getAttribute('data-img');
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+    });
+  }
+
+  var apiBase = window.HERAMB_API_BASE || '';
+  if (apiBase) {
+    fetch(apiBase + '/api/projects')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var projects = data.projects || [];
+        if (!projects.length) return;
+        var grid = document.querySelector('.projects-grid');
+
+        projects.forEach(function (p, i) {
+          var label = CATEGORY_LABELS[p.category] || p.category;
+          var tagClass = TAG_CLASSES[i % TAG_CLASSES.length];
+
+          var card = document.createElement('div');
+          card.className = 'project-card';
+          card.setAttribute('data-category', p.category);
+          card.innerHTML =
+            '<div data-img="' + escapeHtml(p.image_url) + '" class="project-thumb ' + tagClass + '">' +
+              '<img src="' + escapeHtml(p.image_url) + '" alt="' + escapeHtml(label) + ' project photo" loading="lazy" decoding="async" class="thumb-img">' +
+              '<span class="tag">' + escapeHtml(label) + '</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>' + escapeHtml(p.title) + '</h3><p>' + escapeHtml(p.description) + '</p></div>';
+
+          grid.insertBefore(card, grid.firstChild);
+          attachLightbox(card.querySelector('.project-thumb'));
+        });
+
+        // Re-run the category filter now that new cards exist, so the
+        // right ones show/hide under whichever tab is currently active.
+        if (window.herambReapplyProjectFilter) window.herambReapplyProjectFilter();
+      })
+      .catch(function (e) { console.error('Could not load projects from the server:', e); });
+  }
+})();
+</script>
+</body>
+</html>
