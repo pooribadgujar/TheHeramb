@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var toggleBtn = document.getElementById('reviewsToggleBtn');
     var toggleLabel = document.getElementById('reviewsToggleLabel');
     var toggleWrap = document.querySelector('.reviews-toggle-wrap');
-    var VISIBLE_COUNT = 3;
+    var VISIBLE_COUNT = 6;
     var expanded = false;
 
     function refreshReviewsToggle() {
@@ -461,7 +461,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       toggleWrap.hidden = false;
-      toggleLabel.textContent = expanded ? 'Show Fewer Reviews' : 'Show All Reviews (' + total + ')';
+      var extra = total - VISIBLE_COUNT;
+      toggleLabel.textContent = expanded ? 'Show Fewer Reviews' : 'Show ' + extra + ' More Reviews';
     }
 
     if (toggleBtn) {
@@ -485,9 +486,13 @@ document.addEventListener('DOMContentLoaded', function () {
         var rows = data.reviews || [];
 
         // Render each approved review as a card (reviews.html only) —
-        // added to the TOP of the grid (before the placeholder examples
-        // already in the HTML) so a newly approved review is immediately
-        // visible instead of being hidden below 6 sample cards.
+        // added to the BOTTOM of the grid, after the 6 fixed sample cards.
+        // Nothing is ever removed: once there are more than 6 total, the
+        // extra ones (old or new) sit behind the "Show More" toggle below.
+        // Render each approved review as a card (reviews.html only) —
+        // added to the TOP of the grid, newest first. The 6 fixed sample
+        // cards blend in right below. Nothing is ever removed: once there
+        // are more than 6 total, the rest sit behind the "Show More" toggle.
         if (approvedGrid && rows.length) {
           rows.slice().reverse().forEach(function (r) {
             var card = document.createElement('div');
@@ -508,10 +513,18 @@ document.addEventListener('DOMContentLoaded', function () {
           refreshReviewsToggle();
         }
 
-        // Recalculate the average rating from real approved reviews.
-        // Until there's at least one real approved review, the page keeps
-        // showing the starting baseline of 4.9 set in the HTML.
+        // Recalculate the average rating by BLENDING real approved reviews
+        // into the existing baseline reputation — the 6 sample reviews on
+        // this page plus years of real-world business — rather than
+        // replacing it outright. A single new 3-star review shouldn't crash
+        // the average from 4.9 to 3.0; it should nudge it slightly.
+        // The baseline star breakdown (88/9/2/1/0%) is treated as a virtual
+        // set of 100 prior reviews, which the real ones are added on top of.
         if (rows.length) {
+          var BASELINE_TOTAL = 100;
+          var BASELINE_COUNTS = { 5: 88, 4: 9, 3: 2, 2: 1, 1: 0 };
+          var BASELINE_SUM = 5 * 88 + 4 * 9 + 3 * 2 + 2 * 1 + 1 * 0; // 484
+
           var sum = 0;
           var counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
           rows.forEach(function (r) {
@@ -519,7 +532,10 @@ document.addEventListener('DOMContentLoaded', function () {
             sum += s;
             counts[s] = (counts[s] || 0) + 1;
           });
-          var avg = sum / rows.length;
+
+          var totalCount = BASELINE_TOTAL + rows.length;
+          var totalSum = BASELINE_SUM + sum;
+          var avg = totalSum / totalCount;
           var avgRounded = Math.round(avg * 10) / 10;
 
           if (ratingBigNum) ratingBigNum.textContent = avgRounded.toFixed(1);
@@ -535,7 +551,8 @@ document.addEventListener('DOMContentLoaded', function () {
           if (ratingBars.length) {
             ratingBars.forEach(function (row) {
               var star = parseInt(row.getAttribute('data-stars'), 10);
-              var pct = Math.round((counts[star] / rows.length) * 100);
+              var combinedCount = (BASELINE_COUNTS[star] || 0) + (counts[star] || 0);
+              var pct = Math.round((combinedCount / totalCount) * 100);
               var fill = row.querySelector('.bar-fill');
               var pctLabel = row.querySelector('.bar-pct');
               if (fill) fill.style.width = pct + '%';

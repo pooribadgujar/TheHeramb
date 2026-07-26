@@ -827,8 +827,8 @@ footer ul li a:focus:not(:focus-visible) { outline: none; }
 .review-card { border-left: 4px solid var(--orange); transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
 
 /* ---------- Show All Reviews toggle ---------- */
-.review-grid .review-card:nth-child(n+4) { display: none; }
-.review-grid.expanded .review-card:nth-child(n+4) { display: block; }
+.review-grid .review-card:nth-child(n+7) { display: none; }
+.review-grid.expanded .review-card:nth-child(n+7) { display: block; }
 .reviews-toggle-wrap { display: flex; justify-content: center; margin-top: 30px; }
 .reviews-more-btn {
   display: inline-flex; align-items: center; gap: 8px;

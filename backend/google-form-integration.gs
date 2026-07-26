@@ -51,7 +51,7 @@
 //
 // ===========================================================================
 
-var BACKEND_URL = 'https://theherambackend.onrender.com/api/reviews';
+var BACKEND_URL = 'https://theheramb.onrender.com/api/reviews';
 var WHATSAPP_NUMBER = '919579480187';
 var CALLMEBOT_API_KEY = 'PASTE_YOUR_CALLMEBOT_API_KEY_HERE';
 
