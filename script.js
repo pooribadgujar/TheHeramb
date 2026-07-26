@@ -187,11 +187,19 @@ document.addEventListener('DOMContentLoaded', function () {
     revealEls.forEach(function (el) { el.classList.add('in-view'); });
   }
 
-  // Highlight the current page in the nav automatically
-  var current = window.location.pathname.split('/').pop() || 'index.html';
+  // Highlight the current page in the nav automatically.
+  // Written to work whether the URL has ".html" on the end or not —
+  // Netlify serves pages without the extension (e.g. "/profile" instead
+  // of "/profile.html"), so both forms need to match the same nav link.
+  function normalizePage(raw) {
+    var last = (raw || '').split('/').pop().split('?')[0].split('#')[0];
+    last = last.replace(/\.html$/i, '');
+    return last === '' ? 'index' : last;
+  }
+  var currentPage = normalizePage(window.location.pathname);
   document.querySelectorAll('.nav-links a').forEach(function (a) {
-    var href = a.getAttribute('href');
-    if (href === current || (current === '' && href === 'index.html')) {
+    var hrefPage = normalizePage(a.getAttribute('href'));
+    if (hrefPage === currentPage) {
       a.classList.add('active');
     }
   });
