@@ -825,6 +825,23 @@ footer ul li a:focus:not(:focus-visible) { outline: none; }
 
 /* Review cards -> colorful accent bar left edge, cycling colors */
 .review-card { border-left: 4px solid var(--orange); transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
+
+/* ---------- Show All Reviews toggle ---------- */
+.review-grid .review-card:nth-child(n+4) { display: none; }
+.review-grid.expanded .review-card:nth-child(n+4) { display: block; }
+.reviews-toggle-wrap { display: flex; justify-content: center; margin-top: 30px; }
+.reviews-more-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--beige-panel); border: 1px solid var(--beige-line);
+  color: var(--charcoal); font-family: var(--font-body); font-weight: 600; font-size: .92rem;
+  padding: 12px 24px; border-radius: 999px; cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .15s ease;
+}
+.reviews-more-btn:hover { background: var(--orange-tint); border-color: var(--orange-tint-2); }
+.reviews-more-btn:active { transform: scale(.97); }
+.reviews-more-btn .chevron { transition: transform .25s ease; }
+.reviews-more-btn.open .chevron { transform: rotate(180deg); }
+.reviews-toggle-wrap[hidden] { display: none; }
 .review-card:nth-child(3n+1) { border-left-color: var(--orange); }
 .review-card:nth-child(3n+2) { border-left-color: var(--teal-pop); }
 .review-card:nth-child(3n+3) { border-left-color: var(--coral-pop); }

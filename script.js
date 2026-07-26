@@ -403,10 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 
-      // 1) Save locally first so nothing is ever lost.
-      saveReviewLocally({ name: name, role: role, phone: phone, rating: rating, review_text: reviewText });
-
-      // 2) Notify the owner on WhatsApp immediately with the full review —
+      // 1) Notify the owner on WhatsApp immediately with the full review —
       //    it only gets published on the site once approved in the admin panel.
       var waNumber = window.HERAMB_WHATSAPP_NUMBER || '919579480187';
       var stars = '★★★★★'.slice(0, rating) + '☆☆☆☆☆'.slice(0, 5 - rating);
@@ -418,15 +415,18 @@ document.addEventListener('DOMContentLoaded', function () {
         '\nReply "approve" or approve it in the admin panel to publish it on the Reviews page.';
       window.open('https://wa.me/' + waNumber + '?text=' + encodeURIComponent(waText), '_blank', 'noopener');
 
-      // 3) Best-effort: also send to the backend so it shows in admin.html
-      //    for one-tap approve/reject, and can be published site-wide.
+      // 2) Send to the backend so it shows in admin.html for one-tap
+      //    approve/reject. Only falls back to a local-only copy if this
+      //    fails — otherwise a successful submission would show up twice.
       var apiBase = window.HERAMB_API_BASE || '';
       fetch(apiBase + '/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name, role: role, phone: phone, rating: rating, reviewText: reviewText })
       })
-        .catch(function () { /* local copy + WhatsApp message already cover this */ })
+        .catch(function () {
+          saveReviewLocally({ name: name, role: role, phone: phone, rating: rating, review_text: reviewText });
+        })
         .finally(function () {
           showMsg('Thanks ' + name + '! Your review has been sent to us on WhatsApp and will appear on this page once we approve it.');
           if (window.fireConfetti) window.fireConfetti(submitBtn);
@@ -447,15 +447,49 @@ document.addEventListener('DOMContentLoaded', function () {
   var ratingBars = document.querySelectorAll('#ratingBars .bar-row');
 
   if (approvedGrid || ratingBigNum || avgRatingStat) {
+    var toggleBtn = document.getElementById('reviewsToggleBtn');
+    var toggleLabel = document.getElementById('reviewsToggleLabel');
+    var toggleWrap = document.querySelector('.reviews-toggle-wrap');
+    var VISIBLE_COUNT = 3;
+    var expanded = false;
+
+    function refreshReviewsToggle() {
+      if (!approvedGrid || !toggleBtn || !toggleWrap) return;
+      var total = approvedGrid.querySelectorAll('.review-card').length;
+      if (total <= VISIBLE_COUNT) {
+        toggleWrap.hidden = true;
+        return;
+      }
+      toggleWrap.hidden = false;
+      toggleLabel.textContent = expanded ? 'Show Fewer Reviews' : 'Show All Reviews (' + total + ')';
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        expanded = !expanded;
+        approvedGrid.classList.toggle('expanded', expanded);
+        toggleBtn.classList.toggle('open', expanded);
+        refreshReviewsToggle();
+        if (!expanded) {
+          approvedGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
+    refreshReviewsToggle();
+
     var apiBase2 = window.HERAMB_API_BASE || '';
     fetch(apiBase2 + '/api/reviews/approved')
       .then(function (res) { return res.json(); })
       .then(function (data) {
         var rows = data.reviews || [];
 
-        // Render each approved review as a card (reviews.html only)
+        // Render each approved review as a card (reviews.html only) —
+        // added to the TOP of the grid (before the placeholder examples
+        // already in the HTML) so a newly approved review is immediately
+        // visible instead of being hidden below 6 sample cards.
         if (approvedGrid && rows.length) {
-          rows.forEach(function (r) {
+          rows.slice().reverse().forEach(function (r) {
             var card = document.createElement('div');
             card.className = 'review-card reveal in-view';
             var initials = (r.name || '?').trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase();
@@ -469,8 +503,9 @@ document.addEventListener('DOMContentLoaded', function () {
             card.querySelector('.review-avatar').textContent = initials;
             card.querySelector('.review-name').textContent = r.name;
             card.querySelector('.review-role').textContent = r.role || 'Customer';
-            approvedGrid.appendChild(card);
+            approvedGrid.insertBefore(card, approvedGrid.firstChild);
           });
+          refreshReviewsToggle();
         }
 
         // Recalculate the average rating from real approved reviews.
@@ -537,13 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 
-      // 1) Save a permanent local copy right away, before anything else can fail.
-      saveEnquiryLocally({
-        name: name, phone: phone, service: service, amount: amount,
-        message: message, source_page: sourcePage
-      });
-
-      // 2) Open a pre-filled WhatsApp message to the business number so the
+      // 1) Open a pre-filled WhatsApp message to the business number so the
       //    enquiry reaches a real phone instantly — this doesn't depend on
       //    any backend being online. (Opened synchronously, in direct
       //    response to the click, so browsers won't block it as a popup.)
@@ -570,6 +599,13 @@ document.addEventListener('DOMContentLoaded', function () {
           if (result.ok) {
             showMessage('Thanks ' + (name || 'there') + '! Your enquiry is saved and a WhatsApp message has opened in a new tab — please hit send there so we see it right away.');
           } else {
+            // Server responded but rejected/failed to save it — keep a
+            // local copy so it isn't lost, and admin.html will show it
+            // with a 📱 icon meaning "saved on this device only".
+            saveEnquiryLocally({
+              name: name, phone: phone, service: service, amount: amount,
+              message: message, source_page: sourcePage
+            });
             showMessage('Saved! A WhatsApp message has opened in a new tab — please hit send there so we don\'t miss your enquiry.');
           }
           if (window.fireConfetti) window.fireConfetti(submitBtn);
@@ -577,6 +613,13 @@ document.addEventListener('DOMContentLoaded', function () {
           refreshUpiQr();
         })
         .catch(function () {
+          // Couldn't reach the backend at all (asleep / offline) — this is
+          // the ONLY case a local copy is saved, so a successful server
+          // save never also shows up as a duplicate local entry.
+          saveEnquiryLocally({
+            name: name, phone: phone, service: service, amount: amount,
+            message: message, source_page: sourcePage
+          });
           showMessage('Saved on this device. A WhatsApp message has also opened in a new tab — please hit send there so we don\'t miss your enquiry.');
           if (window.fireConfetti) window.fireConfetti(submitBtn);
           enquiryForm.reset();
