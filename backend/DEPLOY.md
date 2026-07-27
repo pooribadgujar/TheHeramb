@@ -25,6 +25,21 @@ that only you can log into with a password.
 > `CLOUDINARY_...` variables, and click **Save Changes**. Render will
 > automatically redeploy with the new settings in about a minute.
 
+## Step 1.4 — Permanent database (Turso) — IMPORTANT, do this even if already deployed
+
+Without this step, **every enquiry, review, and project gets permanently
+deleted** each time your backend redeploys (which happens every time you
+upload updated code to GitHub). Turso is a free cloud database that keeps
+your data safe forever, completely separate from Render.
+
+1. Go to **https://turso.tech** and sign up free (GitHub sign-in is easiest).
+2. Once logged in, click **Create Database** (name it anything, e.g. `heramb`).
+3. Once created, you'll see a **Database URL** — starts with `libsql://` —
+   copy it.
+4. Click **Create Token** (or similar — generates an auth token), copy that too.
+5. Keep both values handy — you'll paste them into Render in Step 2 as
+   `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`.
+
 ## Step 1.5 — Free image hosting for project photos (Cloudinary)
 
 The "Add Project" form in `admin.html` needs somewhere permanent to store
@@ -38,6 +53,32 @@ this up once.
    right at the top: **Cloud Name**, **API Key**, and **API Secret**.
 3. Keep this tab open — you'll paste these three values into Render in the
    next step.
+
+## Step 1.6 — Instant WhatsApp notifications (Twilio WhatsApp Sandbox)
+
+This makes the server itself message you on WhatsApp the instant someone
+submits an enquiry or review. Uses Twilio (a real, established company) —
+more reliable than free hobby bots, which get overloaded/congested.
+
+1. Go to **https://www.twilio.com/try-twilio** and sign up free (no credit
+   card needed to start).
+2. Once logged in, you'll land on the **Console Dashboard** — copy your
+   **Account SID** and **Auth Token** shown there (click "show" to reveal
+   the token).
+3. In the left menu, find **Messaging → Try it out → Send a WhatsApp message**
+   (sometimes under "Develop → Messaging → Try it out"). This shows you a
+   **join code**, e.g. `join happy-tiger`.
+4. On your own phone, open WhatsApp and send that exact join phrase to
+   **+1 415 523 8886** (Twilio's shared sandbox number).
+5. You'll get a reply confirming you're connected to the sandbox.
+6. You'll paste your **Account SID**, **Auth Token**, and your own WhatsApp
+   number into Render in Step 2 below.
+
+**Note:** Twilio's free sandbox may ask you to resend the join message every
+few days to stay connected — a small trade-off for a free, reliable option.
+If you outgrow this later, Twilio (or an Indian provider like Wati or
+AiSensy) offers a proper always-on WhatsApp Business number for a small
+monthly fee.
 
 ## Step 2 — Deploy the backend on Render
 
@@ -55,18 +96,30 @@ this up once.
    - `SESSION_SECRET` → any long random string (mash your keyboard, 30+ characters)
    - `UPI_ID` → `9421990387@ybl`
    - `NODE_ENV` → `production`
-   - `CLOUDINARY_CLOUD_NAME` → from your Cloudinary Dashboard (Step 1.5)
-   - `CLOUDINARY_API_KEY` → from your Cloudinary Dashboard
-   - `CLOUDINARY_API_SECRET` → from your Cloudinary Dashboard
+   - `TURSO_DATABASE_URL` → from Step 1.4
+   - `TURSO_AUTH_TOKEN` → from Step 1.4
+   - `TWILIO_ACCOUNT_SID` → from Step 1.6
+   - `TWILIO_AUTH_TOKEN` → from Step 1.6
+   - `WHATSAPP_NUMBER` → your number, e.g. `919579480187`
+   - `CLOUDINARY_CLOUD_NAME` → from Step 1.5
+   - `CLOUDINARY_API_KEY` → from Step 1.5
+   - `CLOUDINARY_API_SECRET` → from Step 1.5
 6. Click **Create Web Service**. Wait 2–3 minutes while it builds.
 7. When it's done, Render gives you a URL like:
    `https://heramb-backend.onrender.com`
    — copy this, you'll need it next.
 
+**If you already have a Render service running:** just go to **your service
+→ Environment**, add whichever of the variables above are missing (at least
+`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `TWILIO_ACCOUNT_SID`,
+`TWILIO_AUTH_TOKEN`, `WHATSAPP_NUMBER`), and click **Save Changes** — Render
+redeploys automatically in about a minute.
+
 **Note:** Render's free tier "sleeps" the server after 15 minutes of no
 traffic, so the very first request after a quiet period can take ~30 seconds
 to wake up. That's fine for a small business site — the form will just show
-a brief loading state.
+a brief loading state. This no longer affects your saved data either way,
+since it now lives permanently in Turso, not on Render itself.
 
 ## Step 3 — Point your website at the backend
 

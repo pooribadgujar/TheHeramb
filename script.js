@@ -403,21 +403,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 
-      // 1) Notify the owner on WhatsApp immediately with the full review —
-      //    it only gets published on the site once approved in the admin panel.
-      var waNumber = window.HERAMB_WHATSAPP_NUMBER || '919579480187';
-      var stars = '★★★★★'.slice(0, rating) + '☆☆☆☆☆'.slice(0, 5 - rating);
-      var waText = 'New customer review submitted on the website:\n' +
-        'Name: ' + name + (role ? (' (' + role + ')') : '') + '\n' +
-        'Rating: ' + stars + ' (' + rating + '/5)\n' +
-        'Review: ' + reviewText + '\n' +
-        (phone ? ('Phone: ' + phone + '\n') : '') +
-        '\nReply "approve" or approve it in the admin panel to publish it on the Reviews page.';
-      window.open('https://wa.me/' + waNumber + '?text=' + encodeURIComponent(waText), '_blank', 'noopener');
-
-      // 2) Send to the backend so it shows in admin.html for one-tap
-      //    approve/reject. Only falls back to a local-only copy if this
-      //    fails — otherwise a successful submission would show up twice.
+      // Sent straight to the backend — it saves the review AND instantly
+      // notifies the owner on WhatsApp itself (no popup/manual send needed
+      // here anymore). Only falls back to a local-only copy if the request
+      // truly fails (server unreachable), so a successful submit never also
+      // shows up as a duplicate local entry.
       var apiBase = window.HERAMB_API_BASE || '';
       fetch(apiBase + '/api/reviews', {
         method: 'POST',
@@ -428,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
           saveReviewLocally({ name: name, role: role, phone: phone, rating: rating, review_text: reviewText });
         })
         .finally(function () {
-          showMsg('Thanks ' + name + '! Your review has been sent to us on WhatsApp and will appear on this page once we approve it.');
+          showMsg('Thanks ' + name + '! Your review has been received and will appear on this page once we approve it.');
           if (window.fireConfetti) window.fireConfetti(submitBtn);
           reviewForm.reset();
           selectedRating = 0;
@@ -589,19 +579,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 
-      // 1) Open a pre-filled WhatsApp message to the business number so the
-      //    enquiry reaches a real phone instantly — this doesn't depend on
-      //    any backend being online. (Opened synchronously, in direct
-      //    response to the click, so browsers won't block it as a popup.)
-      var waNumber = window.HERAMB_WHATSAPP_NUMBER || '919579480187';
-      var waText = 'New enquiry from the website:\n' +
-        'Name: ' + (name || '-') + '\n' +
-        'Phone: ' + (phone || '-') + '\n' +
-        'Service: ' + (service || '-') + '\n' +
-        (amount ? ('Amount: ₹' + amount + '\n') : '') +
-        (message ? ('Message: ' + message + '\n') : '') +
-        'Page: ' + sourcePage;
-      window.open('https://wa.me/' + waNumber + '?text=' + encodeURIComponent(waText), '_blank', 'noopener');
+      function openWhatsAppFallback() {
+        var waNumber = window.HERAMB_WHATSAPP_NUMBER || '919579480187';
+        var waText = 'New enquiry from the website:\n' +
+          'Name: ' + (name || '-') + '\n' +
+          'Phone: ' + (phone || '-') + '\n' +
+          'Service: ' + (service || '-') + '\n' +
+          (amount ? ('Amount: ₹' + amount + '\n') : '') +
+          (message ? ('Message: ' + message + '\n') : '') +
+          'Page: ' + sourcePage;
+        window.open('https://wa.me/' + waNumber + '?text=' + encodeURIComponent(waText), '_blank', 'noopener');
+      }
 
       fetch(apiBase + '/api/enquiries', {
         method: 'POST',
@@ -614,15 +602,20 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
         .then(function (result) {
           if (result.ok) {
-            showMessage('Thanks ' + (name || 'there') + '! Your enquiry is saved and a WhatsApp message has opened in a new tab — please hit send there so we see it right away.');
+            // Saved successfully — the server already notified WhatsApp
+            // instantly on its own, so no popup/manual send needed here.
+            showMessage('Thanks ' + (name || 'there') + '! Your enquiry has been received — we\'ll be in touch shortly.');
           } else {
             // Server responded but rejected/failed to save it — keep a
             // local copy so it isn't lost, and admin.html will show it
-            // with a 📱 icon meaning "saved on this device only".
+            // with a 📱 icon meaning "saved on this device only". Also
+            // fall back to the WhatsApp popup since the server notification
+            // won't have fired for a save that didn't happen.
             saveEnquiryLocally({
               name: name, phone: phone, service: service, amount: amount,
               message: message, source_page: sourcePage
             });
+            openWhatsAppFallback();
             showMessage('Saved! A WhatsApp message has opened in a new tab — please hit send there so we don\'t miss your enquiry.');
           }
           if (window.fireConfetti) window.fireConfetti(submitBtn);
@@ -631,12 +624,13 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(function () {
           // Couldn't reach the backend at all (asleep / offline) — this is
-          // the ONLY case a local copy is saved, so a successful server
-          // save never also shows up as a duplicate local entry.
+          // the ONLY case a local copy AND the WhatsApp popup fallback are
+          // used, so a successful server save never also shows up twice.
           saveEnquiryLocally({
             name: name, phone: phone, service: service, amount: amount,
             message: message, source_page: sourcePage
           });
+          openWhatsAppFallback();
           showMessage('Saved on this device. A WhatsApp message has also opened in a new tab — please hit send there so we don\'t miss your enquiry.');
           if (window.fireConfetti) window.fireConfetti(submitBtn);
           enquiryForm.reset();
