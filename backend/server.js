@@ -93,6 +93,9 @@ function notifyWhatsApp(message) {
   }).catch((err) => console.error('WhatsApp (Twilio) notification failed:', err));
 }
 
+const compression = require('compression');
+app.use(compression()); // gzip API responses — cheap win under concurrent load
+
 app.use(express.json());
 app.use(cookieParser());
 
