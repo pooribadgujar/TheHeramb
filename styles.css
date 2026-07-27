@@ -128,19 +128,6 @@ p.lead {
 }
 
 /* ---------- Crop-mark signature element ---------- */
-.crop-mark {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border: 2px solid var(--charcoal);
-  opacity: .28;
-  pointer-events: none;
-}
-.crop-mark.tl { top: 18px; left: 18px; border-right: none; border-bottom: none; }
-.crop-mark.tr { top: 18px; right: 18px; border-left: none; border-bottom: none; }
-.crop-mark.bl { bottom: 18px; left: 18px; border-right: none; border-top: none; }
-.crop-mark.br { bottom: 18px; right: 18px; border-left: none; border-top: none; }
-
 .reg-dots { display: inline-flex; gap: 6px; align-items: center; }
 .reg-dots span {
   width: 8px; height: 8px; border-radius: 50%; display: inline-block;
@@ -983,30 +970,6 @@ footer ul li a:focus:not(:focus-visible) { outline: none; }
 .scroll-top-btn.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .scroll-top-btn:hover { background: var(--orange-deep); transform: translateY(-4px) scale(1.08); }
 
-/* Floating WhatsApp button — sits just above the scroll-to-top button */
-.floating-whatsapp-btn {
-  position: fixed;
-  bottom: 88px; right: 26px;
-  width: 56px; height: 56px; border-radius: 50%;
-  background: #25D366; color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 10px 24px rgba(37,211,102,.45);
-  z-index: 95;
-  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
-  animation: waFloatPulse 2.4s ease-in-out infinite;
-}
-.floating-whatsapp-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 12px 28px rgba(37,211,102,.6);
-}
-@keyframes waFloatPulse {
-  0%, 100% { box-shadow: 0 10px 24px rgba(37,211,102,.45); }
-  50% { box-shadow: 0 10px 24px rgba(37,211,102,.45), 0 0 0 8px rgba(37,211,102,.18); }
-}
-@media (max-width: 640px) {
-  .floating-whatsapp-btn { bottom: 82px; right: 16px; width: 50px; height: 50px; }
-}
-
 /* Graphic Design card is informational only — no link, no pointer cursor,
    but keep the same hover animation as the linked service cards */
 .service-card.no-link { cursor: default; }
@@ -1045,7 +1008,10 @@ footer ul li a:focus:not(:focus-visible) { outline: none; }
 
 @media (max-width: 640px) {
   .container { padding: 0 16px; }
-  .hero-stats { gap: 18px; }
+  .hero-stats { gap: 10px; flex-wrap: nowrap; justify-content: space-between; }
+  .hero-stats > div { flex: 1 1 0; min-width: 0; }
+  .hero-stats .stat-num { font-size: 1.4rem; }
+  .hero-stats .stat-label { font-size: 10.5px; letter-spacing: .03em; white-space: normal; }
   .services-grid, .projects-grid, .review-grid { grid-template-columns: 1fr; }
   .stats-strip { grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .filter-btn { padding: 8px 14px; font-size: 13px; }
