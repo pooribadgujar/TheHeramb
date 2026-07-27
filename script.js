@@ -1,5 +1,21 @@
 // ============ HERAMB DESIGNING & PRINTING — shared script ============
 
+// Phone number fields (fPhone on payment.html, rPhone on reviews.html):
+// strip anything that isn't a digit and cap at 10 digits, live as the
+// person types, so only a plain 10-digit mobile number can ever be entered.
+document.addEventListener('DOMContentLoaded', function () {
+  ['fPhone', 'rPhone'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', function () {
+      el.value = el.value.replace(/\D/g, '').slice(0, 10);
+    });
+  });
+});
+window.HERAMB_isValidPhone = function (value) {
+  return /^\d{10}$/.test(String(value || '').trim());
+};
+
 // Floating WhatsApp button — appears on every page, always ready for a chat
 document.addEventListener('DOMContentLoaded', function () {
   var waBtn = document.createElement('a');
@@ -401,6 +417,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
+      if (phone && !window.HERAMB_isValidPhone(phone)) {
+        showMsg('Please enter a valid 10-digit phone number, or leave it blank.');
+        return;
+      }
+
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 
       // Sent straight to the backend — it saves the review AND instantly
@@ -576,6 +597,11 @@ document.addEventListener('DOMContentLoaded', function () {
           msgBox.style.display = 'block';
         }
       };
+
+      if (!window.HERAMB_isValidPhone(phone)) {
+        showMessage('Please enter a valid 10-digit phone number.');
+        return;
+      }
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 

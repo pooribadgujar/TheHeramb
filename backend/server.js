@@ -130,6 +130,28 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// Strips spaces/dashes/+/country code from any phone number so it's always
+// stored as a plain 10-digit number, regardless of whether it came from the
+// website form (already 10 digits) or the Google Form (which may include
+// +91, spaces, or dashes).
+// Exact current time in IST (Indian Standard Time), formatted for display
+// in the admin panel — e.g. "27 Jul 2026, 6:42:15 pm". The database's own
+// datetime('now') defaults to UTC, which is why timestamps looked off.
+function nowIST() {
+  return new Date().toLocaleString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true,
+  }).replace(',', '');
+}
+
+function normalizePhone(raw) {
+  if (!raw) return null;
+  var digits = String(raw).replace(/\D/g, '');
+  if (digits.length > 10) digits = digits.slice(-10); // drop leading country code
+  return digits || null;
+}
+
 function timingSafeEqual(a, b) {
   const bufA = Buffer.from(String(a));
   const bufB = Buffer.from(String(b));
@@ -160,15 +182,15 @@ app.post('/api/enquiries', enquiryLimiter, async (req, res) => {
     }
 
     const cleanName = String(name).trim().slice(0, 200);
-    const cleanPhone = String(phone).trim().slice(0, 50);
+    const cleanPhone = normalizePhone(phone) || String(phone).trim().slice(0, 50);
     const cleanService = service ? String(service).trim().slice(0, 100) : null;
     const cleanMessage = message ? String(message).trim().slice(0, 2000) : null;
     const cleanAmount = amount ? String(amount).trim().slice(0, 50) : null;
     const cleanSourcePage = sourcePage ? String(sourcePage).trim().slice(0, 100) : null;
 
     const info = await db.run(
-      `INSERT INTO enquiries (name, phone, service, message, amount, source_page) VALUES (?, ?, ?, ?, ?, ?)`,
-      [cleanName, cleanPhone, cleanService, cleanMessage, cleanAmount, cleanSourcePage]
+      `INSERT INTO enquiries (name, phone, service, message, amount, source_page, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [cleanName, cleanPhone, cleanService, cleanMessage, cleanAmount, cleanSourcePage, nowIST()]
     );
 
     notifyWhatsApp(
@@ -202,12 +224,12 @@ app.post('/api/reviews', enquiryLimiter, async (req, res) => {
 
     const cleanName = String(name).trim().slice(0, 200);
     const cleanRole = role ? String(role).trim().slice(0, 100) : null;
-    const cleanPhone = phone ? String(phone).trim().slice(0, 50) : null;
+    const cleanPhone = normalizePhone(phone);
     const cleanText = String(reviewText).trim().slice(0, 2000);
 
     const info = await db.run(
-      `INSERT INTO reviews (name, role, phone, rating, review_text) VALUES (?, ?, ?, ?, ?)`,
-      [cleanName, cleanRole, cleanPhone, ratingNum, cleanText]
+      `INSERT INTO reviews (name, role, phone, rating, review_text, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+      [cleanName, cleanRole, cleanPhone, ratingNum, cleanText, nowIST()]
     );
 
     const stars = '★★★★★'.slice(0, ratingNum) + '☆☆☆☆☆'.slice(0, 5 - ratingNum);
@@ -375,12 +397,13 @@ app.post('/api/admin/projects', requireAdmin, (req, res) => {
     try {
       const result = await uploadToCloudinary(req.file.buffer);
       const info = await db.run(
-        `INSERT INTO projects (title, description, category, image_url) VALUES (?, ?, ?, ?)`,
+        `INSERT INTO projects (title, description, category, image_url, created_at) VALUES (?, ?, ?, ?, ?)`,
         [
           String(title).trim().slice(0, 200),
           description ? String(description).trim().slice(0, 500) : null,
           category,
           result.secure_url,
+          nowIST(),
         ]
       );
       res.json({ ok: true, id: info.lastInsertRowid, image_url: result.secure_url });
